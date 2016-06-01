@@ -25,47 +25,45 @@
 #include "json/json.h"
 
 class ClientListener {
-public:
-	ClientListener(int port);
-	virtual ~ClientListener();
+ public:
+  ClientListener(int port);
+  virtual ~ClientListener();
 
-	void configure();
-//	void run();
-	void shutdown();
-	static void checkFdValid(int fd);
-private:
+  void configure();
+  //	void run();
+  void shutdown();
+  static void checkFdValid(int fd);
 
-//	static void backupStd();
-	static void restoreStd();
+ private:
+  //	static void backupStd();
+  static void restoreStd();
 
-	int write(const int fd, const ClientResponse& res) const;
-	int addClient(const int fd);
-	int removeClient(const int fd);
+  int write(const int fd, const ClientResponse &res) const;
+  int addClient(const int fd);
+  int removeClient(const int fd);
 
-	int receiveRequest(const int fd, const char *cmd);
+  int receiveRequest(const int fd, const char *cmd);
 
-	static void* receiveHandler(void *);
-	static void* sendHandler(void *);
+  static void *receiveHandler(void *);
+  static void *sendHandler(void *);
+  static void *monitorHandler(void *);
 
-	static void sendJsonPacket(ClientResponse &cr, ExecutedResult &res);
-	static void generateSqlStmt(int type, char *&buf);
+  static void sendJsonPacket(ClientResponse &cr, ExecutedResult &res);
+  static void generateSqlStmt(int type, char *&buf);
 
-	bool isFull() const {
-		return !(m_num < MAXCONN);
-	}
+  bool isFull() const { return !(m_num < MAXCONN); }
 
-	int m_port;
-	int m_fd;	//listening fd
-	int *m_clientFds;
-	int m_num;
-	const static int MAXCONN = 100;
-	enum client_type{java, c};
-	client_type client_type_;
+  int m_port;
+  int m_fd;  // listening fd
+  int *m_clientFds;
+  int m_num;
+  const static int MAXCONN = 100;
+  enum client_type { java, c };
+  client_type client_type_;
 
-	static int standard_input;
-	static int standard_output;
-	static int standard_err;
-
+  static int standard_input;
+  static int standard_output;
+  static int standard_err;
 };
 
 #endif /* CLAIMSSERVER_H_ */

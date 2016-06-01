@@ -17,6 +17,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <cstdio>
+#include <boost/format.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/algorithm/string.hpp>
+#include <vector>
 #include "../catalog/catalog.h"
 #include "../Daemon/Daemon.h"
 #include "../common/Logging.h"
@@ -139,6 +143,7 @@ void ClientListener::configure() {
 
   pthread_t t_Receiver;
   pthread_t t_Sender;
+  pthread_t t_Monitor;
 
   const int error1 = pthread_create(&t_Receiver, NULL, receiveHandler, this);
   if (error1 != 0) {
@@ -151,7 +156,31 @@ void ClientListener::configure() {
     std::cout << "cannot create send thread!" << strerror(errno) << std::endl;
   }
 
+  const int error3 = pthread_create(&t_Monitor, NULL, monitorHandler, this);
+  if (error3 != 0) {
+    std::cout << "cannot create monitor thread!" << strerror(errno)
+              << std::endl;
+  }
   ClientListenerLogging::log("sender thread id=%x\n", t_Sender);
+}
+void *ClientListener::monitorHandler(void *para) {
+  // TODO(yuyang): should check influxdb server
+
+  std::ostringstream pid_claimsserver;
+  pid_claimsserver << (int)getpid();
+
+  std::ofstream claimsserver_pid;
+  claimsserver_pid.open("cliamsserver_pid");
+  claimsserver_pid << pid_claimsserver.str();
+  claimsserver_pid.close();
+
+  //  int sys_ret = system("./monitor");
+  //  if (sys_ret != 0) {
+  //    cout << "Claims monitor is stopped. You can restart monitor manually."
+  //         << endl;
+  //  }
+
+  return NULL;
 }
 
 void *ClientListener::receiveHandler(void *para) {

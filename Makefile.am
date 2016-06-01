@@ -81,7 +81,8 @@ include_HEADERS = Config.h \
 				
 bin_PROGRAMS =  claimsserver \
 				client \
-				test
+				test \
+				monitor
 				
 client_SOURCES = Client.cpp \
 					Environment.cpp \
@@ -97,6 +98,8 @@ test_SOURCES = Test/gtest_main.cpp\
 				Environment.cpp \
 				IDsGenerator.cpp \
 				Config.cpp
+
+monitor_SOURCES = monitor.cpp
 				
 #node_SOURCES =	Config.cpp	\
 #				node_manager/node_main.cpp

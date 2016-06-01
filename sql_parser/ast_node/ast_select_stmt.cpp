@@ -737,7 +737,6 @@ RetCode AstJoin::SemanticAnalisys(SemanticContext* sem_cnxt) {
 }
 RetCode AstJoin::PushDownCondition(PushDownConditionContext& pdccnxt) {
   PushDownConditionContext cur_pdccnxt;
-  // cout << "join type = " << join_type_ << endl;
   // pdccnxt.sub_expr_info -- conditions from where clause
   if (-1 == join_type_.find("outer")) {
     cur_pdccnxt.sub_expr_info_ = pdccnxt.sub_expr_info_;
